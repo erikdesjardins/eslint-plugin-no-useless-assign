@@ -31,12 +31,22 @@ ruleTester.run('no-redundant-assign', rule, {
 		'(function() { var foo; return foo + bar; });',
 		// function invocation with preceding variable as argument
 		'(function() { var foo; return bar(foo); });',
+		// assignment to global
+		'(function() { foo = bar; return foo; });',
+		// assignment to global, function declaration
+		'function a() { foo = bar; return foo; }',
+		// assignment to global, arrow function
+		{ code: '(() => { foo = bar; return foo; });', ecmaFeatures: { arrowFunctions: true } },
 		// assignment of out-of-scope var
 		'(function() { var foo; (function() { foo = bar; return foo; }); });',
+		// assignment of out-of-scope var, function declaration
+		'function a() { var foo; function b() { foo = bar; return foo; } }',
 		// assignment of out-of-scope var, arrow function
 		{ code: '(function() { var foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true } },
 		// assignment of out-of-scope let
 		{ code: '(function() { let foo; (function() { foo = bar; return foo; }); });', ecmaFeatures: { blockBindings: true } },
+		// assignment of out-of-scope let, function declaration
+		{ code: 'function a() { let foo; function b() { foo = bar; return foo; } }', ecmaFeatures: { blockBindings: true } },
 		// assignment of out-of-scope let, arrow function
 		{ code: '(function() { let foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
 		// not the last var before return
