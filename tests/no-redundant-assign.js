@@ -18,13 +18,13 @@ ruleTester.run('no-redundant-assign', rule, {
 		// return for control flow
 		'(function() { return; });',
 		// return for control flow within shorthand if
-		'(function() { if (foo) return; });',
+		'(function() { if (foo) return; else return; });',
 		// constant
 		'(function() { return 5; });',
 		// variable
 		'(function() { return foo; });',
 		// variable within shorthand if
-		'(function() { if (foo) return foo; });',
+		'(function() { if (foo) return foo; else return foo; });',
 		// declared variable within shorthand if
 		'(function() { var foo; if (foo) return foo; });',
 		// function invocation
