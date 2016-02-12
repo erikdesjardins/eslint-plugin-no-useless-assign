@@ -15,6 +15,8 @@ var assignMessage = 'Redundant assignment.';
 var ruleTester = new RuleTester();
 ruleTester.run('no-redundant-assign', rule, {
 	valid: [
+		// return for control flow
+		'(function() { return; });',
 		// constant
 		'(function() { return 5; });',
 		// variable

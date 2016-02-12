@@ -66,6 +66,10 @@ module.exports = function(context) {
 	}
 
 	function checkReturnStatement(node) {
+		if (!node.argument) {
+			return;
+		}
+
 		if (node.argument.type !== 'Identifier') {
 			return;
 		}
