@@ -1,0 +1,27 @@
+{
+  "name": "eslint-plugin-no-redundant-assign",
+  "version": "0.0.0",
+  "description": "Prevent redundant assignment.",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
+  ],
+  "author": "Erik Desjardins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikdesjardins/eslint-plugin-no-redundant-assign.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./tests/*.js"
+  },
+  "peerDependencies": {
+    "eslint": ">=1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.2.0",
+    "mocha": "^2.4.5"
+  },
+  "license": "MIT"
+}
