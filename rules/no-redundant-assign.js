@@ -11,7 +11,15 @@ module.exports = function(context) {
 
 	function nodeBefore(node) {
 		// BlockStatement
-		var siblings = node.parent.body;
+		var parent = node.parent;
+		var siblings;
+
+		if (parent.type === 'SwitchCase') {
+			siblings = parent.consequent;
+		} else { // BlockStatement
+			siblings = parent.body;
+		}
+
 		for (var i = 0; i < siblings.length - 1; ++i) {
 			if (siblings[i + 1] === node) {
 				return siblings[i];

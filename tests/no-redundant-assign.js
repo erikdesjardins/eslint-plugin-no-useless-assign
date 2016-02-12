@@ -33,6 +33,8 @@ ruleTester.run('no-redundant-assign', rule, {
 		'(function() { var foo; return foo + bar; });',
 		// function invocation with preceding variable as argument
 		'(function() { var foo; return bar(foo); });',
+		// switch case
+		'(function() { switch (foo) { case bar: return baz; } });',
 		// assignment to global
 		'(function() { foo = bar; return foo; });',
 		// assignment to global, function declaration
@@ -53,6 +55,8 @@ ruleTester.run('no-redundant-assign', rule, {
 		{ code: '(function() { let foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
 		// not the last var before return
 		'(function() { var foo, bar; return foo; });',
+		// not the last var before return, switch case
+		'(function() { switch (foo) { case baz: var foo, bar; return foo; } });',
 		// not the last let before return
 		{ code: '(function() { let foo, bar; return foo; });', ecmaFeatures: { blockBindings: true } },
 		// not the last const before return
@@ -101,6 +105,16 @@ ruleTester.run('no-redundant-assign', rule, {
 				type: 'VariableDeclarator',
 				line: 1,
 				column: 30
+			}]
+		},
+		// redundant var, within switch case
+		{
+			code: '(function() { switch (foo) { case baz: var foo; return foo; } });',
+			errors: [{
+				message: varMessage,
+				type: 'VariableDeclarator',
+				line: 1,
+				column: 44
 			}]
 		},
 		// redundant let
@@ -165,6 +179,16 @@ ruleTester.run('no-redundant-assign', rule, {
 				type: 'Identifier',
 				line: 1,
 				column: 42
+			}]
+		},
+		// reassign to var in scope, within switch case
+		{
+			code: '(function() { var foo; switch (foo) { case baz: foo = bar; return foo; } });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 49
 			}]
 		},
 		// reassign to let in scope
