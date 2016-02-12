@@ -74,7 +74,9 @@ ruleTester.run('no-redundant-assign', rule, {
 		// global, many statements deep
 		'(function() { if (foo) {} else { if (foo) with (foo) { for (foo; foo; foo) { while (foo) { do { foo = bar; return foo; } while (foo); } } } } });',
 		// global, within try-catch
-		'(function() { try { foo = bar; return foo; } catch (e) { foo = bar; return foo; } });'
+		'(function() { try { foo = bar; return foo; } catch (e) { foo = bar; return foo; } });',
+		// shorthand plus-equals, etc.
+		'(function() { var foo; foo += 1; return foo; });'
 	],
 	invalid: [
 		// redundant var

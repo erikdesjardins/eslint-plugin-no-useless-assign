@@ -95,7 +95,11 @@ module.exports = function(context) {
 
 		if (prevNode.type === 'VariableDeclaration') {
 			checkForRedundantVar(prevNode, name);
-		} else if (prevNode.type === 'ExpressionStatement' && prevNode.expression.type === 'AssignmentExpression') {
+		} else if (
+			prevNode.type === 'ExpressionStatement' &&
+			prevNode.expression.type === 'AssignmentExpression' &&
+			prevNode.expression.operator === '='
+		) {
 			checkForRedundantAssignment(prevNode, name);
 		}
 	}
