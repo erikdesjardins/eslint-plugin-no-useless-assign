@@ -35,7 +35,17 @@ ruleTester.run('no-redundant-assign', rule, {
 		// assignment of out-of-scope let
 		{ code: 'let foo; function() { foo = bar; return foo; };', ecmaFeatures: { blockBindings: true } },
 		// assignment of out-of-scope let, arrow function
-		{ code: 'let foo; () => { foo = bar; return foo; };', ecmaFeatures: { arrowFunctions: true, blockBindings: true } }
+		{ code: 'let foo; () => { foo = bar; return foo; };', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
+		// not the last var before return
+		'var foo, bar; return foo;',
+		// not the last let before return
+		{ code: 'let foo, bar; return foo;', ecmaFeatures: { blockBindings: true } },
+		// not the last const before return
+		{ code: 'const foo = 1, bar = 2; return foo;', ecmaFeatures: { blockBindings: true } },
+		// multiple var declarations
+		'var foo; var bar; return foo;',
+		// mixed var declarations
+		{ code: 'const foo = 1; let bar; return foo;', ecmaFeatures: { blockBindings: true } }
 	],
 	invalid: [
 	]
