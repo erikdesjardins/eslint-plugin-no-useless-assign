@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-no-redundant-assign",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Prevent redundant assignment.",
   "keywords": [
     "eslint",
