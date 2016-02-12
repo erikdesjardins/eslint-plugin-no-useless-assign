@@ -9,6 +9,8 @@
 var rule = require('../rules/no-redundant-assign');
 var RuleTester = require("eslint").RuleTester;
 
+var errorMessage = 'Redundant assignment.';
+
 var ruleTester = new RuleTester();
 ruleTester.run('no-redundant-assign', rule, {
 	valid: [
@@ -48,5 +50,111 @@ ruleTester.run('no-redundant-assign', rule, {
 		{ code: 'const foo = 1; let bar; return foo;', ecmaFeatures: { blockBindings: true } }
 	],
 	invalid: [
+		// redundant var
+		{
+			code: 'var foo; return foo;',
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 5
+			}]
+		},
+		// redundant var, within block
+		{
+			code: 'function() { if (bar) { var foo; return foo; } }',
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 29
+			}]
+		},
+		// redundant let
+		{
+			code: 'let foo; return foo;',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 5
+			}]
+		},
+		// redundant let, within block
+		{
+			code: 'function() { if (bar) { let foo; return foo; } }',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 29
+			}]
+		},
+		// redundant const
+		{
+			code: 'const foo = bar; return foo;',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 7
+			}]
+		},
+		// redundant const, within block
+		{
+			code: 'function() { if (bar) { const foo = bar; return foo; } }',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 31
+			}]
+		},
+		// reassign to var in scope
+		{
+			code: 'var foo; bar(); foo = baz; return foo;',
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 17
+			}]
+		},
+		// reassign to var in scope, within block
+		{
+			code: 'var foo; bar(); if (1) { foo = baz; return foo; }',
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 26
+			}]
+		},
+		// reassign to let in scope
+		{
+			code: 'let foo; bar(); foo = baz; return foo;',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 17
+			}]
+		},
+		// reassign to let in scope, within block
+		{
+			code: 'let foo; bar(); if (1) { foo = baz; return foo; }',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: errorMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 26
+			}]
+		}
 	]
 });
