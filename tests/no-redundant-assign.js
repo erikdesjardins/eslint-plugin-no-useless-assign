@@ -70,7 +70,11 @@ ruleTester.run('no-redundant-assign', rule, {
 		// multiple var declarations
 		'(function() { var foo; var bar; return foo; });',
 		// mixed var declarations
-		{ code: '(function() { const foo = 1; let bar; return foo; });', ecmaFeatures: { blockBindings: true } }
+		{ code: '(function() { const foo = 1; let bar; return foo; });', ecmaFeatures: { blockBindings: true } },
+		// global, many statements deep
+		'(function() { if (foo) {} else { if (foo) with (foo) { for (foo; foo; foo) { while (foo) { do { foo = bar; return foo; } while (foo); } } } } });',
+		// global, within try-catch
+		'(function() { try { foo = bar; return foo; } catch (e) { foo = bar; return foo; } });'
 	],
 	invalid: [
 		// redundant var
@@ -195,6 +199,41 @@ ruleTester.run('no-redundant-assign', rule, {
 				type: 'Identifier',
 				line: 1,
 				column: 49
+			}]
+		},
+		// reassign to var in scope, many statements deep
+		{
+			code: '(function() { var foo; if (foo) {} else { if (foo) with (foo) { for (foo; foo; foo) { while (foo) { do { foo = bar; return foo; } while (foo); } } } } });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 106
+			}]
+		},
+		// reassign to var in scope, many statements deep (var halfway up)
+		{
+			code: '(function() { if (foo) {} else { if (foo) with (foo) { var foo; for (foo; foo; foo) { while (foo) { do { foo = bar; return foo; } while (foo); } } } } });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 106
+			}]
+		},
+		// reassign to var in scope, within try-catch
+		{
+			code: '(function() { var foo; try { foo = bar; return foo; } catch (e) { foo = bar; return foo; } });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 30
+			}, {
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 67
 			}]
 		},
 		// reassign to let in scope

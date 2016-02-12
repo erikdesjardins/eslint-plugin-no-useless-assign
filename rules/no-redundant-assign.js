@@ -64,7 +64,7 @@ module.exports = function(context) {
 				return;
 			}
 
-			hasOurVar = (parent.body || []).some(function(node) {
+			hasOurVar = Array.isArray(parent.body) && parent.body.some(function(node) {
 				return context.getDeclaredVariables(node).some(function(varDecl) {
 					return varDecl.name === name;
 				});
