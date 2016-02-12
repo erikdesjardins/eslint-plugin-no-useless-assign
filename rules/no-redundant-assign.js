@@ -10,9 +10,13 @@ module.exports = function(context) {
 	var sourceCode = context.getSourceCode();
 
 	function nodeBefore(node) {
-		// BlockStatement
 		var parent = node.parent;
 		var siblings;
+
+		// shorthand if
+		if (parent.type === 'IfStatement') {
+			return null;
+		}
 
 		if (parent.type === 'SwitchCase') {
 			siblings = parent.consequent;
