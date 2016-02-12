@@ -9,151 +9,172 @@
 var rule = require('../rules/no-redundant-assign');
 var RuleTester = require("eslint").RuleTester;
 
-var errorMessage = 'Redundant assignment.';
+var varMessage = 'Redundant variable.';
+var assignMessage = 'Redundant assignment.';
 
 var ruleTester = new RuleTester();
 ruleTester.run('no-redundant-assign', rule, {
 	valid: [
 		// constant
-		'return 5;',
+		'(function() { return 5; });',
 		// variable
-		'return foo;',
+		'(function() { return foo; });',
 		// function invocation
-		'return foo.bar();',
+		'(function() { return foo.bar(); });',
 		// property of preceding variable
-		'var foo; return foo.bar;',
+		'(function() { var foo; return foo.bar; });',
 		// function invocation of preceding variable
-		'var foo; return foo();',
+		'(function() { var foo; return foo(); });',
 		// function invocation on preceding variable
-		'var foo; return foo.bar()',
+		'(function() { var foo; return foo.bar() });',
 		// expression involving preceding variable
-		'var foo; return foo + bar;',
+		'(function() { var foo; return foo + bar; });',
 		// function invocation with preceding variable as argument
-		'var foo; return bar(foo);',
+		'(function() { var foo; return bar(foo); });',
 		// assignment of out-of-scope var
-		'var foo; function() { foo = bar; return foo; };',
+		'(function() { var foo; (function() { foo = bar; return foo; }); });',
 		// assignment of out-of-scope var, arrow function
-		{ code: 'var foo; () => { foo = bar; return foo; };', ecmaFeatures: { arrowFunctions: true } },
+		{ code: '(function() { var foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true } },
 		// assignment of out-of-scope let
-		{ code: 'let foo; function() { foo = bar; return foo; };', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { let foo; (function() { foo = bar; return foo; }); });', ecmaFeatures: { blockBindings: true } },
 		// assignment of out-of-scope let, arrow function
-		{ code: 'let foo; () => { foo = bar; return foo; };', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
+		{ code: '(function() { let foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
 		// not the last var before return
-		'var foo, bar; return foo;',
+		'(function() { var foo, bar; return foo; });',
 		// not the last let before return
-		{ code: 'let foo, bar; return foo;', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { let foo, bar; return foo; });', ecmaFeatures: { blockBindings: true } },
 		// not the last const before return
-		{ code: 'const foo = 1, bar = 2; return foo;', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { const foo = 1, bar = 2; return foo; });', ecmaFeatures: { blockBindings: true } },
 		// multiple var declarations
-		'var foo; var bar; return foo;',
+		'(function() { var foo; var bar; return foo; });',
 		// mixed var declarations
-		{ code: 'const foo = 1; let bar; return foo;', ecmaFeatures: { blockBindings: true } }
+		{ code: '(function() { const foo = 1; let bar; return foo; });', ecmaFeatures: { blockBindings: true } }
 	],
 	invalid: [
 		// redundant var
 		{
-			code: 'var foo; return foo;',
+			code: '(function() { var foo; return foo; });',
 			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
+				message: varMessage,
+				type: 'VariableDeclarator',
 				line: 1,
-				column: 5
+				column: 19
+			}]
+		},
+		// redundant var, last in list
+		{
+			code: '(function() { var bar, foo; return foo; });',
+			errors: [{
+				message: varMessage,
+				type: 'VariableDeclarator',
+				line: 1,
+				column: 24
+			}]
+		},
+		// redundant initialized var, last in list
+		{
+			code: '(function() { var bar, foo = baz; return foo; });',
+			errors: [{
+				message: varMessage,
+				type: 'VariableDeclarator',
+				line: 1,
+				column: 24
 			}]
 		},
 		// redundant var, within block
 		{
-			code: 'function() { if (bar) { var foo; return foo; } }',
+			code: '(function() { if (bar) { var foo; return foo; } });',
 			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
+				message: varMessage,
+				type: 'VariableDeclarator',
 				line: 1,
-				column: 29
+				column: 30
 			}]
 		},
 		// redundant let
 		{
-			code: 'let foo; return foo;',
+			code: '(function() { let foo; return foo; });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
+				message: varMessage,
+				type: 'VariableDeclarator',
 				line: 1,
-				column: 5
+				column: 19
 			}]
 		},
 		// redundant let, within block
 		{
-			code: 'function() { if (bar) { let foo; return foo; } }',
+			code: '(function() { if (bar) { let foo; return foo; } });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
+				message: varMessage,
+				type: 'VariableDeclarator',
 				line: 1,
-				column: 29
+				column: 30
 			}]
 		},
 		// redundant const
 		{
-			code: 'const foo = bar; return foo;',
+			code: '(function() { const foo = bar; return foo; });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
+				message: varMessage,
+				type: 'VariableDeclarator',
 				line: 1,
-				column: 7
+				column: 21
 			}]
 		},
 		// redundant const, within block
 		{
-			code: 'function() { if (bar) { const foo = bar; return foo; } }',
+			code: '(function() { if (bar) { const foo = bar; return foo; } });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
+				message: varMessage,
+				type: 'VariableDeclarator',
+				line: 1,
+				column: 32
+			}]
+		},
+		// reassign to var in scope
+		{
+			code: '(function() { var foo; bar(); foo = baz; return foo; });',
+			errors: [{
+				message: assignMessage,
 				type: 'Identifier',
 				line: 1,
 				column: 31
 			}]
 		},
-		// reassign to var in scope
-		{
-			code: 'var foo; bar(); foo = baz; return foo;',
-			errors: [{
-				message: errorMessage,
-				type: 'Identifier',
-				line: 1,
-				column: 17
-			}]
-		},
 		// reassign to var in scope, within block
 		{
-			code: 'var foo; bar(); if (1) { foo = baz; return foo; }',
+			code: '(function() { var foo; bar(); if (baz) { foo = baz; return foo; } });',
 			errors: [{
-				message: errorMessage,
+				message: assignMessage,
 				type: 'Identifier',
 				line: 1,
-				column: 26
+				column: 42
 			}]
 		},
 		// reassign to let in scope
 		{
-			code: 'let foo; bar(); foo = baz; return foo;',
+			code: '(function() { let foo; bar(); foo = baz; return foo; });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
+				message: assignMessage,
 				type: 'Identifier',
 				line: 1,
-				column: 17
+				column: 31
 			}]
 		},
 		// reassign to let in scope, within block
 		{
-			code: 'let foo; bar(); if (1) { foo = baz; return foo; }',
+			code: '(function() { let foo; bar(); if (baz) { foo = baz; return foo; } });',
 			ecmaFeatures: { blockBindings: true },
 			errors: [{
-				message: errorMessage,
+				message: assignMessage,
 				type: 'Identifier',
 				line: 1,
-				column: 26
+				column: 42
 			}]
 		}
 	]
