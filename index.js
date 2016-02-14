@@ -1,5 +1,5 @@
 /**
- * @fileoverview Prevent redundant assignment.
+ * @fileoverview Prevent useless assignment.
  * @author Erik Desjardins
  * @copyright 2016 Erik Desjardins. All rights reserved.
  * See LICENSE file in root directory for full license.
@@ -8,6 +8,6 @@
 
 module.exports = {
 	rules: {
-		'no-redundant-assign': require('./rules/no-redundant-assign')
+		'no-useless-assign': require('./rules/no-useless-assign')
 	}
 };

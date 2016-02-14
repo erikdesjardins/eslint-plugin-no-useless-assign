@@ -1,6 +1,6 @@
-# eslint-plugin-no-redundant-assign [![Build Status](https://travis-ci.org/erikdesjardins/eslint-plugin-no-redundant-assign.svg?branch=master)](https://travis-ci.org/erikdesjardins/eslint-plugin-no-redundant-assign)
+# eslint-plugin-no-useless-assign [![Build Status](https://travis-ci.org/erikdesjardins/eslint-plugin-no-useless-assign.svg?branch=master)](https://travis-ci.org/erikdesjardins/eslint-plugin-no-useless-assign)
 
-Prevent redundant assignment of the form:
+Prevent useless assignment of the form:
 
 ```js
 var foo = bar;
@@ -14,15 +14,15 @@ foo = bar;
 return foo;
 ```
 
-`npm i --save-dev eslint-plugin-no-redundant-assign`
+`npm i --save-dev eslint-plugin-no-useless-assign`
 
 ```json
 {
 	"plugins": [
-		"no-redundant-assign"
+		"no-useless-assign"
 	],
 	"rules": {
-		"no-redundant-assign/no-redundant-assign": 2
+		"no-useless-assign/no-useless-assign": 2
 	}
 }
 ```
