@@ -1,19 +1,19 @@
 /**
- * @fileoverview Prevent redundant assignment.
+ * @fileoverview Prevent useless assignment.
  * @author Erik Desjardins
  * @copyright 2016 Erik Desjardins. All rights reserved.
  * See LICENSE file in root directory for full license.
  */
 'use strict';
 
-var rule = require('../rules/no-redundant-assign');
+var rule = require('../rules/no-useless-assign');
 var RuleTester = require("eslint").RuleTester;
 
 var varMessage = 'Redundant variable.';
-var assignMessage = 'Redundant assignment.';
+var assignMessage = 'Useless assignment.';
 
 var ruleTester = new RuleTester();
-ruleTester.run('no-redundant-assign', rule, {
+ruleTester.run('no-useless-assign', rule, {
 	valid: [
 		// return for control flow
 		'(function() { return; });',
@@ -79,7 +79,7 @@ ruleTester.run('no-redundant-assign', rule, {
 		'(function() { var foo; foo += 1; return foo; });'
 	],
 	invalid: [
-		// redundant var
+		// useless var
 		{
 			code: '(function() { var foo; return foo; });',
 			errors: [{
@@ -89,7 +89,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 19
 			}]
 		},
-		// redundant var, last in list
+		// useless var, last in list
 		{
 			code: '(function() { var bar, foo; return foo; });',
 			errors: [{
@@ -99,7 +99,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 24
 			}]
 		},
-		// redundant initialized var, last in list
+		// useless initialized var, last in list
 		{
 			code: '(function() { var bar, foo = baz; return foo; });',
 			errors: [{
@@ -109,7 +109,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 24
 			}]
 		},
-		// redundant var, within block
+		// useless var, within block
 		{
 			code: '(function() { if (bar) { var foo; return foo; } });',
 			errors: [{
@@ -119,7 +119,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 30
 			}]
 		},
-		// redundant var, within switch case
+		// useless var, within switch case
 		{
 			code: '(function() { switch (foo) { case baz: var foo; return foo; } });',
 			errors: [{
@@ -129,7 +129,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 44
 			}]
 		},
-		// redundant let
+		// useless let
 		{
 			code: '(function() { let foo; return foo; });',
 			ecmaFeatures: { blockBindings: true },
@@ -140,7 +140,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 19
 			}]
 		},
-		// redundant let, within block
+		// useless let, within block
 		{
 			code: '(function() { if (bar) { let foo; return foo; } });',
 			ecmaFeatures: { blockBindings: true },
@@ -151,7 +151,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 30
 			}]
 		},
-		// redundant const
+		// useless const
 		{
 			code: '(function() { const foo = bar; return foo; });',
 			ecmaFeatures: { blockBindings: true },
@@ -162,7 +162,7 @@ ruleTester.run('no-redundant-assign', rule, {
 				column: 21
 			}]
 		},
-		// redundant const, within block
+		// useless const, within block
 		{
 			code: '(function() { if (bar) { const foo = bar; return foo; } });',
 			ecmaFeatures: { blockBindings: true },

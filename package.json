@@ -1,7 +1,7 @@
 {
-  "name": "eslint-plugin-no-redundant-assign",
+  "name": "eslint-plugin-no-useless-assign",
   "version": "0.0.1",
-  "description": "Prevent redundant assignment.",
+  "description": "Prevent useless assignment.",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -10,7 +10,7 @@
   "author": "Erik Desjardins",
   "repository": {
     "type": "git",
-    "url": "https://github.com/erikdesjardins/eslint-plugin-no-redundant-assign.git"
+    "url": "https://github.com/erikdesjardins/eslint-plugin-no-useless-assign.git"
   },
   "main": "index.js",
   "scripts": {

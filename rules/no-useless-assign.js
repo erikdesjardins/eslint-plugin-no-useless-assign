@@ -1,5 +1,5 @@
 /**
- * @fileoverview Prevent redundant assignment.
+ * @fileoverview Prevent useless assignment.
  * @author Erik Desjardins
  * @copyright 2016 Erik Desjardins. All rights reserved.
  * See LICENSE file in root directory for full license.
@@ -43,7 +43,7 @@ module.exports = function(context) {
 		}
 	}
 
-	function checkForRedundantAssignment(assignment, name) {
+	function checkForUselessAssignment(assignment, name) {
 		var left = assignment.expression.left;
 
 		if (left.type !== 'Identifier') {
@@ -73,7 +73,7 @@ module.exports = function(context) {
 
 		context.report({
 			node: left,
-			message: 'Redundant assignment.'
+			message: 'Useless assignment.'
 		});
 	}
 
@@ -100,7 +100,7 @@ module.exports = function(context) {
 			prevNode.expression.type === 'AssignmentExpression' &&
 			prevNode.expression.operator === '='
 		) {
-			checkForRedundantAssignment(prevNode, name);
+			checkForUselessAssignment(prevNode, name);
 		}
 	}
 
