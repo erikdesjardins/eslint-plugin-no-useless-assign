@@ -76,7 +76,9 @@ ruleTester.run('no-useless-assign', rule, {
 		// global, within try-catch
 		'(function() { try { foo = bar; return foo; } catch (e) { foo = bar; return foo; } });',
 		// shorthand plus-equals, etc.
-		'(function() { var foo; foo += 1; return foo; });'
+		'(function() { var foo; foo += 1; return foo; });',
+		// _just_ out-of-scope
+		'(function() { var foo; function a() { var bar; function b() { bar = baz; return bar; } foo = baz; return foo; } });'
 	],
 	invalid: [
 		// useless var
@@ -236,6 +238,21 @@ ruleTester.run('no-useless-assign', rule, {
 				type: 'Identifier',
 				line: 1,
 				column: 67
+			}]
+		},
+		// reassign to var in scope, split across intermediate scope
+		{
+			code: '(function() { var foo; function a() { var bar; bar = baz; return bar; } foo = baz; return foo; });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 48
+			}, {
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 73
 			}]
 		},
 		// reassign to let in scope
