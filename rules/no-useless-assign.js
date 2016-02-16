@@ -7,21 +7,35 @@
 'use strict';
 
 module.exports = function(context) {
-	var sourceCode = context.getSourceCode();
+	var scopes = [];
+
+	function enterScope() {
+		scopes.push({});
+	}
+
+	function exitScope() {
+		scopes.pop();
+	}
+
+	function addDeclaredVariables(node) {
+		var thisScope = scopes[scopes.length - 1];
+		context.getDeclaredVariables(node).forEach(function(varDecl) {
+			thisScope[varDecl.name] = true;
+		});
+	}
 
 	function nodeBefore(node) {
 		var parent = node.parent;
 		var siblings;
 
-		// shorthand if
-		if (parent.type === 'IfStatement') {
-			return null;
-		}
-
 		if (parent.type === 'SwitchCase') {
 			siblings = parent.consequent;
 		} else { // BlockStatement
 			siblings = parent.body;
+		}
+
+		if (!siblings) {
+			return null;
 		}
 
 		for (var i = 0; i < siblings.length - 1; ++i) {
@@ -54,21 +68,9 @@ module.exports = function(context) {
 			return;
 		}
 
-		for (var parent = assignment.parent, hasOurVar = false; !hasOurVar; parent = parent.parent) {
-			if (
-				parent.type === 'FunctionDeclaration' ||
-				parent.type === 'FunctionExpression' ||
-				parent.type === 'ArrowFunctionExpression'
-			) {
-				// variable is not in this function scope, return
-				return;
-			}
-
-			hasOurVar = Array.isArray(parent.body) && parent.body.some(function(node) {
-				return context.getDeclaredVariables(node).some(function(varDecl) {
-					return varDecl.name === name;
-				});
-			});
+		if (!scopes[scopes.length - 1][name]) {
+			// variable not declared in scope
+			return;
 		}
 
 		context.report({
@@ -105,6 +107,18 @@ module.exports = function(context) {
 	}
 
 	return {
+		Program: enterScope,
+		FunctionDeclaration: enterScope,
+		FunctionExpression: enterScope,
+		ArrowFunctionExpression: enterScope,
+
+		'Program:exit': exitScope,
+		'FunctionDeclaration:exit': exitScope,
+		'FunctionExpression:exit': exitScope,
+		'ArrowFunctionExpression:exit': exitScope,
+
+		VariableDeclaration: addDeclaredVariables,
+
 		ReturnStatement: checkReturnStatement
 	};
 };
