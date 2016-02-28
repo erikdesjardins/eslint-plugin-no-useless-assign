@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-no-useless-assign",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Prevent useless assignment.",
   "keywords": [
     "eslint",
