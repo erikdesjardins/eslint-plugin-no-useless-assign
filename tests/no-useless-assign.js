@@ -78,7 +78,17 @@ ruleTester.run('no-useless-assign', rule, {
 		// shorthand plus-equals, etc.
 		'(function() { var foo; foo += 1; return foo; });',
 		// _just_ out-of-scope
-		'(function() { var foo; function a() { var bar; function b() { bar = baz; return bar; } foo = baz; return foo; } });'
+		'(function() { var foo; function a() { var bar; function b() { bar = baz; return bar; } foo = baz; return foo; } });',
+		// params out-of-scope
+		'(function(foo) { (function() { foo = bar; return foo; }); });',
+		// arrow function params out-of-scope
+		{ code: '(foo => { (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true } },
+		// generator params out-of-scope
+		{ code: '(function*(foo) { (function*() { foo = bar; return foo; }); });', ecmaFeatures: { generators: true } },
+		// class method params out-of-scope
+		{ code: '(class { foo(bar) { (function() { bar = baz; return bar; }); } });', ecmaFeatures: { classes: true } },
+		// object method params out-of-scope
+		{ code: '({ foo(bar) { (function() { bar = baz; return bar; }); } });', ecmaFeatures: { objectLiteralShorthandMethods: true } },
 	],
 	invalid: [
 		// useless var
