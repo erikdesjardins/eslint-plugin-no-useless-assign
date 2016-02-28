@@ -276,6 +276,97 @@ ruleTester.run('no-useless-assign', rule, {
 				line: 1,
 				column: 42
 			}]
-		}
+		},
+		// shadowed var, let
+		{
+			code: '(function() { var foo; let bar; (function() { var foo; foo = 5; return foo; }); (function() { let bar; bar = 5; return bar; }); });',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 56
+			}, {
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 104
+			}]
+		},
+		// reassign to params
+		{
+			code: '(function(foo) { foo = bar; return foo; });',
+			ecmaFeatures: { blockBindings: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 18
+			}]
+		},
+		// reassign to params, shadowing var out-of-scope
+		{
+			code: '(function() { var foo; (function(foo) { foo = bar; return foo; }); });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 41
+			}]
+		},
+		// reassign to var, shadowing params out-of-scope
+		{
+			code: '(function(foo) { (function() { var foo; foo = bar; return foo; }); });',
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 41
+			}]
+		},
+		// reassign to arrow function params
+		{
+			code: '(foo => { foo = bar; return foo; });',
+			ecmaFeatures: { arrowFunctions: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 11
+			}]
+		},
+		// reassign to generator params
+		{
+			code: '(function*(foo) { foo = bar; return foo; });',
+			ecmaFeatures: { generators: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 19
+			}]
+		},
+		// reassign to class method params
+		{
+			code: '(class { foo(bar) { bar = baz; return bar; } });',
+			ecmaFeatures: { classes: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 21
+			}]
+		},
+		// reassign to object method params
+		{
+			code: '({ foo(bar) { bar = baz; return bar; } });',
+			ecmaFeatures: { objectLiteralShorthandMethods: true },
+			errors: [{
+				message: assignMessage,
+				type: 'Identifier',
+				line: 1,
+				column: 15
+			}]
+		},
 	]
 });
