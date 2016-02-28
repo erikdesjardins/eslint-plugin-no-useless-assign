@@ -9,8 +9,10 @@
 module.exports = function(context) {
 	var scopes = [];
 
-	function enterScope() {
+	function enterScope(node) {
 		scopes.push({});
+		// for params
+		addDeclaredVariables(node);
 	}
 
 	function exitScope() {
