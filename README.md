@@ -14,6 +14,8 @@ foo = bar;
 return foo;
 ```
 
+## Usage
+
 `npm i --save-dev eslint-plugin-no-useless-assign`
 
 ```json
