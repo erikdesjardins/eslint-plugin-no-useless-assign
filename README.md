@@ -20,11 +20,11 @@ return foo;
 
 ```json
 {
-	"plugins": [
-		"no-useless-assign"
-	],
-	"rules": {
-		"no-useless-assign/no-useless-assign": 2
-	}
+  "plugins": [
+    "no-useless-assign"
+  ],
+  "rules": {
+    "no-useless-assign/no-useless-assign": 2
+  }
 }
 ```
