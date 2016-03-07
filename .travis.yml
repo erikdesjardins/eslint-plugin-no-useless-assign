@@ -6,3 +6,11 @@ node_js:
   - "0.12"
   - "0.10"
 script: npm test
+deploy:
+  provider: npm
+  email: 'public@erikdesjardins.io'
+  api_key:
+    secure: eTLssdcfPh0LJZ+5yloh4R8VXeXzpsxIEznFOVbcVHdpF+9k6w8o8OCyzrF2a0hhsEVKK97xnj4joDuDT5IB9LWxkgcpszQPi3JoPuJ07iR83qNPA047eRHkI7/qtB1+GH7ju5YhlzTCCQhA0U3BvrnjLfAQj6Znwb+7OVDZWcMGjrJ6nmIqdCq9blYElxq+o0AOBMXIfBIpAzjtemh9hiD07wcoj0ZP3dnZL7CXevDQhwirMxv13CUD7SWaIwOBetBDPdZcLuaSQG7eVgGeZffUkWzHzGjF6RKKn0nYku72Sswoa3iSAF5Kbwn6DawfswSvlv0JtwsIxkIF694cv8SG6oWey9gr9Rg22AmmfAR531QPmeGjnMYuU8BBkwrBoQ3t22WxMzONYXxLMjkDf3GFiotB8MBbeZ9ZdS01QKTq6txTGs+2BP95Qfv5cCkUVtGqrUHFY1J5p4HSqYNNVa2xdkrmu9/GX4VWaYraQJZgSYnfNZyvokYW1vyE7KIXmh6YU85wEktoKKtGW31qKADjFY1N28YuSMG269gsq6v/6OnybICgBI7f//4C2sAADPNyz+aMP0I++QvJ2L8l4m6w2mQwxV1ynr+Pk349jYac+/dYCf9v18WucmscaTXRHMfuV9w/wG8Bt4GTRtLTJeTJVYs9jriljluRaWL9T2k=
+  on:
+    tags: true
+    node: 5
