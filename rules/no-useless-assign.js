@@ -51,7 +51,7 @@ module.exports = function(context) {
 	function checkForRedundantVar(declar, name) {
 		var lastVar = declar.declarations[declar.declarations.length - 1];
 
-		if (lastVar.id.name === name) {
+		if (lastVar && lastVar.id.name === name) {
 			context.report({
 				node: lastVar,
 				message: 'Redundant variable.'
