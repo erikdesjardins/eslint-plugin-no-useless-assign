@@ -20,8 +20,8 @@
     "eslint": ">=1.0.0"
   },
   "devDependencies": {
-    "eslint": "^1.2.0",
-    "mocha": "^2.4.5"
+    "eslint": "^6.6.0",
+    "mocha": "^6.2.2"
   },
   "license": "MIT"
 }

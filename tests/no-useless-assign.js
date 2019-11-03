@@ -46,31 +46,31 @@ ruleTester.run('no-useless-assign', rule, {
 		// assignment to global, function declaration
 		'function a() { foo = bar; return foo; }',
 		// assignment to global, arrow function
-		{ code: '(() => { foo = bar; return foo; });', ecmaFeatures: { arrowFunctions: true } },
+		{ code: '(() => { foo = bar; return foo; });', parserOptions: { ecmaVersion: 2018 } },
 		// assignment of out-of-scope var
 		'(function() { var foo; (function() { foo = bar; return foo; }); });',
 		// assignment of out-of-scope var, function declaration
 		'function a() { var foo; function b() { foo = bar; return foo; } }',
 		// assignment of out-of-scope var, arrow function
-		{ code: '(function() { var foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true } },
+		{ code: '(function() { var foo; (() => { foo = bar; return foo; }); });', parserOptions: { ecmaVersion: 2018 } },
 		// assignment of out-of-scope let
-		{ code: '(function() { let foo; (function() { foo = bar; return foo; }); });', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { let foo; (function() { foo = bar; return foo; }); });', parserOptions: { ecmaVersion: 2018 } },
 		// assignment of out-of-scope let, function declaration
-		{ code: 'function a() { let foo; function b() { foo = bar; return foo; } }', ecmaFeatures: { blockBindings: true } },
+		{ code: 'function a() { let foo; function b() { foo = bar; return foo; } }', parserOptions: { ecmaVersion: 2018 } },
 		// assignment of out-of-scope let, arrow function
-		{ code: '(function() { let foo; (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true, blockBindings: true } },
+		{ code: '(function() { let foo; (() => { foo = bar; return foo; }); });', parserOptions: { ecmaVersion: 2018 } },
 		// not the last var before return
 		'(function() { var foo, bar; return foo; });',
 		// not the last var before return, switch case
 		'(function() { switch (foo) { case baz: var foo, bar; return foo; } });',
 		// not the last let before return
-		{ code: '(function() { let foo, bar; return foo; });', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { let foo, bar; return foo; });', parserOptions: { ecmaVersion: 2018 } },
 		// not the last const before return
-		{ code: '(function() { const foo = 1, bar = 2; return foo; });', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { const foo = 1, bar = 2; return foo; });', parserOptions: { ecmaVersion: 2018 } },
 		// multiple var declarations
 		'(function() { var foo; var bar; return foo; });',
 		// mixed var declarations
-		{ code: '(function() { const foo = 1; let bar; return foo; });', ecmaFeatures: { blockBindings: true } },
+		{ code: '(function() { const foo = 1; let bar; return foo; });', parserOptions: { ecmaVersion: 2018 } },
 		// global, many statements deep
 		'(function() { if (foo) {} else { if (foo) with (foo) { for (foo; foo; foo) { while (foo) { do { foo = bar; return foo; } while (foo); } } } } });',
 		// global, within try-catch
@@ -82,13 +82,13 @@ ruleTester.run('no-useless-assign', rule, {
 		// params out-of-scope
 		'(function(foo) { (function() { foo = bar; return foo; }); });',
 		// arrow function params out-of-scope
-		{ code: '(foo => { (() => { foo = bar; return foo; }); });', ecmaFeatures: { arrowFunctions: true } },
+		{ code: '(foo => { (() => { foo = bar; return foo; }); });', parserOptions: { ecmaVersion: 2018 } },
 		// generator params out-of-scope
-		{ code: '(function*(foo) { (function*() { foo = bar; return foo; }); });', ecmaFeatures: { generators: true } },
+		{ code: '(function*(foo) { (function*() { foo = bar; return foo; }); });', parserOptions: { ecmaVersion: 2018 } },
 		// class method params out-of-scope
-		{ code: '(class { foo(bar) { (function() { bar = baz; return bar; }); } });', ecmaFeatures: { classes: true } },
+		{ code: '(class { foo(bar) { (function() { bar = baz; return bar; }); } });', parserOptions: { ecmaVersion: 2018 } },
 		// object method params out-of-scope
-		{ code: '({ foo(bar) { (function() { bar = baz; return bar; }); } });', ecmaFeatures: { objectLiteralShorthandMethods: true } },
+		{ code: '({ foo(bar) { (function() { bar = baz; return bar; }); } });', parserOptions: { ecmaVersion: 2018 } },
 	],
 	invalid: [
 		// useless var
@@ -144,7 +144,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// useless let
 		{
 			code: '(function() { let foo; return foo; });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: varMessage,
 				type: 'VariableDeclarator',
@@ -155,7 +155,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// useless let, within block
 		{
 			code: '(function() { if (bar) { let foo; return foo; } });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: varMessage,
 				type: 'VariableDeclarator',
@@ -166,7 +166,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// useless const
 		{
 			code: '(function() { const foo = bar; return foo; });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: varMessage,
 				type: 'VariableDeclarator',
@@ -177,7 +177,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// useless const, within block
 		{
 			code: '(function() { if (bar) { const foo = bar; return foo; } });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: varMessage,
 				type: 'VariableDeclarator',
@@ -268,7 +268,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to let in scope
 		{
 			code: '(function() { let foo; bar(); foo = baz; return foo; });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -279,7 +279,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to let in scope, within block
 		{
 			code: '(function() { let foo; bar(); if (baz) { foo = baz; return foo; } });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -290,7 +290,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// shadowed var, let
 		{
 			code: '(function() { var foo; let bar; (function() { var foo; foo = 5; return foo; }); (function() { let bar; bar = 5; return bar; }); });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -306,7 +306,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to params
 		{
 			code: '(function(foo) { foo = bar; return foo; });',
-			ecmaFeatures: { blockBindings: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -337,7 +337,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to arrow function params
 		{
 			code: '(foo => { foo = bar; return foo; });',
-			ecmaFeatures: { arrowFunctions: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -348,7 +348,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to generator params
 		{
 			code: '(function*(foo) { foo = bar; return foo; });',
-			ecmaFeatures: { generators: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -359,7 +359,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to class method params
 		{
 			code: '(class { foo(bar) { bar = baz; return bar; } });',
-			ecmaFeatures: { classes: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
@@ -370,7 +370,7 @@ ruleTester.run('no-useless-assign', rule, {
 		// reassign to object method params
 		{
 			code: '({ foo(bar) { bar = baz; return bar; } });',
-			ecmaFeatures: { objectLiteralShorthandMethods: true },
+			parserOptions: { ecmaVersion: 2018 },
 			errors: [{
 				message: assignMessage,
 				type: 'Identifier',
