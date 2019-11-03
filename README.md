@@ -1,4 +1,4 @@
-# eslint-plugin-no-useless-assign [![Build Status](https://travis-ci.org/erikdesjardins/eslint-plugin-no-useless-assign.svg?branch=master)](https://travis-ci.org/erikdesjardins/eslint-plugin-no-useless-assign)
+# eslint-plugin-no-useless-assign
 
 Prevent useless assignment of the form:
 
